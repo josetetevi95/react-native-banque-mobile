@@ -3,6 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import LoginScreen from './components/LoginScreen'
+import RegisterScreen from './components/RegisterScreen';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -11,7 +13,7 @@ export default function App() {
     <NavigationContainer>
       <Drawer.Navigator>
         <Drawer.Screen name="login" component={LoginScreen} />
-        {/* <Drawer.Screen name="add" component={AddScreen} /> */}
+        <Drawer.Screen name="register" component={RegisterScreen} />
         {/* <Drawer.Screen name="Update" component={UpdateScreen} /> */}
       </Drawer.Navigator>
     </NavigationContainer>
