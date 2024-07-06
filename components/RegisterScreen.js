@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { Formik } from 'formik';
+import { API_URL } from '@env';
 
 export default function RegistrationScreen({ navigation }) {
 
@@ -8,7 +9,7 @@ export default function RegistrationScreen({ navigation }) {
     const handleRegister = (values) => {
 
         // Envoyer les données à l'API pour l'inscription
-        fetch('http://localhost:7000/api/users/register', {
+        fetch(`http://127.0.0.1:7000/api/users/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

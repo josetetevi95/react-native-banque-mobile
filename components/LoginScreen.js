@@ -34,6 +34,8 @@ const LoginScreen = ({ navigation }) => {
             password: values.password
         };
 
+        console.log(`${API_URL}/api/users/login`);
+
         try {
             const response = await fetch(`${API_URL}/api/users/login`, {
                 method: 'POST',
