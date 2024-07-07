@@ -9,6 +9,7 @@ import RegisterScreen from './components/RegisterScreen';
 import HomeScreen from './components/HomeScreen';
 import TransferScreen from './components/TransferScreen';
 import LogoutButton from './components/LogoutButton';
+import CheckbookRequestScreen from './components/CheckbookRequestScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -22,6 +23,7 @@ const AppNavigator = () => {
           <>
             <Drawer.Screen name="Home" component={HomeScreen} />
             <Drawer.Screen name="Transfer" component={TransferScreen} />
+            <Drawer.Screen name="RequestCheckbook" component={CheckbookRequestScreen} />
             <Drawer.Screen name="Logout" component={LogoutButton} />
           </>
         ) : (
