@@ -20,16 +20,16 @@ const BottomNavigation = ({ navigation, activeTab }) => {
             >
                 <Icon name="trending-up" size={24} color={activeTab === 'Invest' ? '#50c878fa' : '#aaa'} />
                 <Text style={[styles.footerButtonText, activeTab === 'Invest' && styles.activeFooterButtonText]}>
-                    Investir
+                    Transfert
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={[styles.footerButton, activeTab === 'Payments' && styles.activeFooterButton]}
                 onPress={() => navigation.navigate('Payments')}
             >
-                <Icon name="card" size={24} color={activeTab === 'Payments' ? '#50c878fa' : '#aaa'} />
+                <Icon name="book" size={24} color={activeTab === 'Payments' ? '#50c878fa' : '#aaa'} />
                 <Text style={[styles.footerButtonText, activeTab === 'Payments' && styles.activeFooterButtonText]}>
-                    Paiements
+                    Chequier
                 </Text>
             </TouchableOpacity>
         </View>

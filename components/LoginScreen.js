@@ -1,13 +1,13 @@
-// components/LoginScreen.js
-
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, Image, Alert } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import { API_URL } from '@env';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { UserContext } from '../context/UserContext';
 
 const LoginScreen = ({ navigation }) => {
+    const { setUser } = useContext(UserContext);
     const translateY = useRef(new Animated.Value(0)).current;
 
     const onGestureEvent = Animated.event(
@@ -18,7 +18,7 @@ const LoginScreen = ({ navigation }) => {
     const onHandlerStateChange = event => {
         if (event.nativeEvent.state === State.END) {
             if (event.nativeEvent.translationY < -100) {
-                navigation.navigate('register');
+                navigation.navigate('S\'inscrire');
             } else {
                 Animated.spring(translateY, {
                     toValue: 0,
@@ -31,10 +31,8 @@ const LoginScreen = ({ navigation }) => {
     const handleSubmit = async (values, { resetForm }) => {
         const user = {
             email: values.email,
-            password: values.password
+            password: values.password,
         };
-
-        console.log(`${API_URL}/api/users/login`);
 
         try {
             const response = await fetch(`${API_URL}/api/users/login`, {
@@ -48,8 +46,9 @@ const LoginScreen = ({ navigation }) => {
             const data = await response.json();
             if (response.ok) {
                 Alert.alert('Success', 'Login successful');
+                setUser(data);  // Enregistrer les informations de l'utilisateur dans le contexte
                 resetForm();
-                // Navigate to the next screen or perform other actions
+                navigation.navigate('Home');
 
             } else {
                 Alert.alert('Error', data.message || 'Login failed');
@@ -62,10 +61,10 @@ const LoginScreen = ({ navigation }) => {
 
     const validationSchema = Yup.object().shape({
         email: Yup.string()
-            .email('Invalid email address')
-            .required('Email is required'),
+            .email('Adresse e-mail invalide')
+            .required('L\'e - mail est requis'),
         password: Yup.string()
-            .required('Password is required'),
+            .required('Mot de passe requis'),
     });
 
     return (
@@ -76,10 +75,10 @@ const LoginScreen = ({ navigation }) => {
             <Animated.View style={[styles.container, { transform: [{ translateY }] }]}>
                 <View style={styles.header}>
                     <Image source={require('../assets/logo.png')} style={styles.logo} />
-                    <Text style={styles.welcomeText}>Hello There, Welcome Back</Text>
+                    <Text style={styles.welcomeText}>Bonjour, bon retour</Text>
                 </View>
                 <View style={styles.formContainer}>
-                    <Text style={styles.loginText}>Login</Text>
+                    <Text style={styles.loginText}>Se connecter</Text>
                     <Formik
                         initialValues={{ email: '', password: '' }}
                         validationSchema={validationSchema}
@@ -100,7 +99,7 @@ const LoginScreen = ({ navigation }) => {
                                 )}
                                 <TextInput
                                     style={styles.input}
-                                    placeholder="Password"
+                                    placeholder="Mot de passe"
                                     placeholderTextColor="#aaa"
                                     secureTextEntry
                                     onChangeText={handleChange('password')}
@@ -111,7 +110,7 @@ const LoginScreen = ({ navigation }) => {
                                     <Text style={styles.errorText}>{errors.password}</Text>
                                 )}
                                 <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                                    <Text style={styles.submitButtonText}>Submit</Text>
+                                    <Text style={styles.submitButtonText}>Soumettre</Text>
                                 </TouchableOpacity>
                             </>
                         )}
@@ -119,12 +118,14 @@ const LoginScreen = ({ navigation }) => {
                 </View>
                 <View style={styles.footer}>
                     <View style={styles.swipeIndicator}></View>
-                    <Text style={styles.registerText}>Swipe me up to register</Text>
+                    <Text style={styles.registerText}>Faites-moi glisser vers le haut pour vous inscrire</Text>
                 </View>
             </Animated.View>
         </PanGestureHandler>
     );
 };
+
+export default LoginScreen;
 
 const styles = StyleSheet.create({
     container: {
@@ -209,5 +210,3 @@ const styles = StyleSheet.create({
         height: 150,
     },
 });
-
-export default LoginScreen;

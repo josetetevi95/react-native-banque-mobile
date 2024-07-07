@@ -1,25 +1,47 @@
+import React, { useContext } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import LoginScreen from './components/LoginScreen'
+import { UserProvider, UserContext } from './context/UserContext';
+import LoginScreen from './components/LoginScreen';
 import RegisterScreen from './components/RegisterScreen';
 import HomeScreen from './components/HomeScreen';
 import TransferScreen from './components/TransferScreen';
-
+import LogoutButton from './components/LogoutButton';
+import CheckbookRequestScreen from './components/CheckbookRequestScreen';
 
 const Drawer = createDrawerNavigator();
 
-export default function App() {
+const AppNavigator = () => {
+  const { user, setUser } = useContext(UserContext);
+
   return (
     <NavigationContainer>
       <Drawer.Navigator>
-        <Drawer.Screen name="login" component={LoginScreen} />
-        <Drawer.Screen name="register" component={RegisterScreen} />
-        <Drawer.Screen name="home" component={HomeScreen} />
-        <Drawer.Screen name="transfer" component={TransferScreen} />
+        {user ? (
+          <>
+            <Drawer.Screen name="Acceuil" component={HomeScreen} />
+            <Drawer.Screen name="Transfert" component={TransferScreen} />
+            <Drawer.Screen name="Demander un chéquier" component={CheckbookRequestScreen} />
+            <Drawer.Screen name="Se déconnecter" component={LogoutButton} />
+          </>
+        ) : (
+          <>
+            <Drawer.Screen name="Se connecter" component={LoginScreen} />
+            <Drawer.Screen name="S'inscrire" component={RegisterScreen} />
+          </>
+        )}
       </Drawer.Navigator>
     </NavigationContainer>
+  );
+};
+
+export default function App() {
+  return (
+    <UserProvider>
+      <AppNavigator />
+    </UserProvider>
   );
 }
 
