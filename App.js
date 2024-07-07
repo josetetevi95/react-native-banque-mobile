@@ -8,6 +8,7 @@ import LoginScreen from './components/LoginScreen';
 import RegisterScreen from './components/RegisterScreen';
 import HomeScreen from './components/HomeScreen';
 import TransferScreen from './components/TransferScreen';
+import LogoutButton from './components/LogoutButton';
 
 const Drawer = createDrawerNavigator();
 
@@ -21,15 +22,7 @@ const AppNavigator = () => {
           <>
             <Drawer.Screen name="Home" component={HomeScreen} />
             <Drawer.Screen name="Transfer" component={TransferScreen} />
-            <Drawer.Screen name="Logout" component={() => (
-              <View style={styles.container}>
-                <Text>You are logged in as {user.email}</Text>
-                <Button
-                  title="Logout"
-                  onPress={() => setUser(null)}
-                />
-              </View>
-            )} />
+            <Drawer.Screen name="Logout" component={LogoutButton} />
           </>
         ) : (
           <>
