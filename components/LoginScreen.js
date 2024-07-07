@@ -1,13 +1,13 @@
-// components/LoginScreen.js
-
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, Image, Alert } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import { API_URL } from '@env';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { UserContext } from '../context/UserContext';
 
 const LoginScreen = ({ navigation }) => {
+    const { setUser } = useContext(UserContext);
     const translateY = useRef(new Animated.Value(0)).current;
 
     const onGestureEvent = Animated.event(
@@ -18,7 +18,7 @@ const LoginScreen = ({ navigation }) => {
     const onHandlerStateChange = event => {
         if (event.nativeEvent.state === State.END) {
             if (event.nativeEvent.translationY < -100) {
-                navigation.navigate('register');
+                navigation.navigate('Register');
             } else {
                 Animated.spring(translateY, {
                     toValue: 0,
@@ -31,10 +31,8 @@ const LoginScreen = ({ navigation }) => {
     const handleSubmit = async (values, { resetForm }) => {
         const user = {
             email: values.email,
-            password: values.password
+            password: values.password,
         };
-
-        console.log(`${API_URL}/api/users/login`);
 
         try {
             const response = await fetch(`${API_URL}/api/users/login`, {
@@ -48,8 +46,9 @@ const LoginScreen = ({ navigation }) => {
             const data = await response.json();
             if (response.ok) {
                 Alert.alert('Success', 'Login successful');
+                setUser(data);  // Enregistrer les informations de l'utilisateur dans le contexte
                 resetForm();
-                // Navigate to the next screen or perform other actions
+                navigation.navigate('Home'); // Naviguer vers Home
             } else {
                 Alert.alert('Error', data.message || 'Login failed');
             }
