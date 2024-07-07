@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BottomNavigation from './menu/BottomNavigation';
+import { UserProvider, UserContext } from '../context/UserContext';
 
 const HomeScreen = ({ navigation }) => {
+
+    const { user, setUser } = useContext(UserContext);
+    console.log(user);
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -17,7 +22,7 @@ const HomeScreen = ({ navigation }) => {
                 </View>
                 <View style={styles.balanceContainer}>
                     <Text style={styles.balanceText}>Principal · EUR</Text>
-                    <Text style={styles.balanceAmount}>2,84 €</Text>
+                    <Text style={styles.balanceAmount}>{user.solde} €</Text>
                     <TouchableOpacity style={styles.balanceButton}>
                         <Text style={styles.balanceButtonText}>Comptes</Text>
                     </TouchableOpacity>

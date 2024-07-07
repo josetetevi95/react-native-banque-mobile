@@ -15,7 +15,7 @@ const LogoutButton = () => {
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.logoutButton}>
-                <Text style={styles.logoutButtonText}>Logout</Text>
+                <Text style={styles.logoutButtonText}>Se déconnecter</Text>
             </TouchableOpacity>
             <LogoutModal
                 visible={modalVisible}

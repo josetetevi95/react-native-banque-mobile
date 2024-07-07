@@ -18,7 +18,7 @@ const LoginScreen = ({ navigation }) => {
     const onHandlerStateChange = event => {
         if (event.nativeEvent.state === State.END) {
             if (event.nativeEvent.translationY < -100) {
-                navigation.navigate('Register');
+                navigation.navigate('S\'inscrire');
             } else {
                 Animated.spring(translateY, {
                     toValue: 0,
@@ -48,7 +48,7 @@ const LoginScreen = ({ navigation }) => {
                 Alert.alert('Success', 'Login successful');
                 setUser(data);  // Enregistrer les informations de l'utilisateur dans le contexte
                 resetForm();
-                navigation.navigate('Home'); // Naviguer vers Home
+                navigation.navigate('Home');
             } else {
                 Alert.alert('Error', data.message || 'Login failed');
             }
@@ -60,10 +60,10 @@ const LoginScreen = ({ navigation }) => {
 
     const validationSchema = Yup.object().shape({
         email: Yup.string()
-            .email('Invalid email address')
-            .required('Email is required'),
+            .email('Adresse e-mail invalide')
+            .required('L\'e - mail est requis'),
         password: Yup.string()
-            .required('Password is required'),
+            .required('Mot de passe requis'),
     });
 
     return (
@@ -74,10 +74,10 @@ const LoginScreen = ({ navigation }) => {
             <Animated.View style={[styles.container, { transform: [{ translateY }] }]}>
                 <View style={styles.header}>
                     <Image source={require('../assets/logo.png')} style={styles.logo} />
-                    <Text style={styles.welcomeText}>Hello There, Welcome Back</Text>
+                    <Text style={styles.welcomeText}>Bonjour, bon retour</Text>
                 </View>
                 <View style={styles.formContainer}>
-                    <Text style={styles.loginText}>Login</Text>
+                    <Text style={styles.loginText}>Se connecter</Text>
                     <Formik
                         initialValues={{ email: '', password: '' }}
                         validationSchema={validationSchema}
@@ -98,7 +98,7 @@ const LoginScreen = ({ navigation }) => {
                                 )}
                                 <TextInput
                                     style={styles.input}
-                                    placeholder="Password"
+                                    placeholder="Mot de passe"
                                     placeholderTextColor="#aaa"
                                     secureTextEntry
                                     onChangeText={handleChange('password')}
@@ -109,7 +109,7 @@ const LoginScreen = ({ navigation }) => {
                                     <Text style={styles.errorText}>{errors.password}</Text>
                                 )}
                                 <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                                    <Text style={styles.submitButtonText}>Submit</Text>
+                                    <Text style={styles.submitButtonText}>Soumettre</Text>
                                 </TouchableOpacity>
                             </>
                         )}
@@ -117,12 +117,14 @@ const LoginScreen = ({ navigation }) => {
                 </View>
                 <View style={styles.footer}>
                     <View style={styles.swipeIndicator}></View>
-                    <Text style={styles.registerText}>Swipe me up to register</Text>
+                    <Text style={styles.registerText}>Faites-moi glisser vers le haut pour vous inscrire</Text>
                 </View>
             </Animated.View>
         </PanGestureHandler>
     );
 };
+
+export default LoginScreen;
 
 const styles = StyleSheet.create({
     container: {
@@ -207,5 +209,3 @@ const styles = StyleSheet.create({
         height: 150,
     },
 });
-
-export default LoginScreen;

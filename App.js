@@ -21,15 +21,15 @@ const AppNavigator = () => {
       <Drawer.Navigator>
         {user ? (
           <>
-            <Drawer.Screen name="Home" component={HomeScreen} />
-            <Drawer.Screen name="Transfer" component={TransferScreen} />
-            <Drawer.Screen name="RequestCheckbook" component={CheckbookRequestScreen} />
-            <Drawer.Screen name="Logout" component={LogoutButton} />
+            <Drawer.Screen name="Acceuil" component={HomeScreen} />
+            <Drawer.Screen name="Transfert" component={TransferScreen} />
+            <Drawer.Screen name="Demander un chéquier" component={CheckbookRequestScreen} />
+            <Drawer.Screen name="Se déconnecter" component={LogoutButton} />
           </>
         ) : (
           <>
-            <Drawer.Screen name="Login" component={LoginScreen} />
-            <Drawer.Screen name="Register" component={RegisterScreen} />
+            <Drawer.Screen name="Se connecter" component={LoginScreen} />
+            <Drawer.Screen name="S'inscrire" component={RegisterScreen} />
           </>
         )}
       </Drawer.Navigator>

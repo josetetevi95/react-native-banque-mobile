@@ -13,7 +13,7 @@ const LogoutModal = ({ visible, onCancel, onConfirm }) => {
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                     <Icon name="exit-outline" size={50} color="#ff6347" style={styles.icon} />
-                    <Text style={styles.modalText}>Oh no! You're leaving... Are you sure?</Text>
+                    <Text style={styles.modalText}>Oh non! Vous partez... Vous êtes sûr ?</Text>
                     <View style={styles.buttonContainer}>
                         <TouchableOpacity
                             style={[styles.button, styles.buttonCancel]}

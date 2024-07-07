@@ -15,7 +15,7 @@ const RegistrationScreen = ({ navigation }) => {
         },
         onEnd: (event) => {
             if (event.translationY > 100) {
-                navigation.navigate('login');
+                navigation.navigate('Se connecter');
             } else {
                 translateY.value = withSpring(0);
             }
@@ -76,10 +76,10 @@ const RegistrationScreen = ({ navigation }) => {
             <Animated.View style={[styles.container, animatedStyle]}>
                 <View style={styles.header}>
                     <Image source={require('../assets/logo.png')} style={styles.logo} />
-                    <Text style={styles.welcomeText}>Welcome, Register Below</Text>
+                    <Text style={styles.welcomeText}>Bienvenue, inscrivez-vous ci-dessous</Text>
                 </View>
                 <View style={styles.formContainer}>
-                    <Text style={styles.registerText}>Register</Text>
+                    <Text style={styles.registerText}>S'inscrire</Text>
                     <Formik
                         initialValues={{ nom: '', prenom: '', email: '', password: '' }}
                         validationSchema={validationSchema}
@@ -142,12 +142,14 @@ const RegistrationScreen = ({ navigation }) => {
                 </View>
                 <View style={styles.footer}>
                     <View style={styles.swipeIndicator}></View>
-                    <Text style={styles.loginText}>Swipe me down to login</Text>
+                    <Text style={styles.loginText}>Faites-moi glisser vers le bas pour vous connecter</Text>
                 </View>
             </Animated.View>
         </PanGestureHandler>
     );
 };
+
+export default RegistrationScreen;
 
 const styles = StyleSheet.create({
     container: {
@@ -232,5 +234,3 @@ const styles = StyleSheet.create({
         height: 100,
     },
 });
-
-export default RegistrationScreen;

@@ -9,7 +9,6 @@ import { UserProvider, UserContext } from '../context/UserContext';
 const CheckbookRequestScreen = ({ navigation }) => {
 
     const { user, setUser } = useContext(UserContext);
-    console.log(user);
 
     const validationSchema = Yup.object().shape({
         checkbookType: Yup.string().required('Type de chéquier est requis'),
