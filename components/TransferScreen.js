@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { UserContext } from '../context/UserContext';
+import { API_URL } from '@env';
 
 
 const TransferScreen = ({ navigation }) => {
+    const { user, setUser } = useContext(UserContext);
     const [transfer, setTransfer] = useState({
         receiver_iban: '',
         amount: ''
     });
+
+    console.log(user)
 
     const [userIban, setUserIban] = useState('');
 
@@ -14,11 +19,12 @@ const TransferScreen = ({ navigation }) => {
         // Fonction pour récupérer les informations de l'utilisateur connecté
         const fetchUserData = async () => {
             try {
-                const userId = 1; // Remplacez par l'ID de l'utilisateur connecté
-                const response = await fetch(`http://localhost:7000/api/users/${userId}`);
+                const userId = user.id; // Remplacez par l'ID de l'utilisateur connecté
+                const response = await fetch(`${API_URL}/api/users/${userId}`);
                 const data = await response.json();
                 console.log('Données utilisateur:', data);
                 if (data.success) {
+                    setUser(data.user)
                     setUserIban(data.user.iban);
                 } else {
                     Alert.alert('Erreur', 'Erreur lors de la récupération de l\'IBAN');
@@ -44,7 +50,9 @@ const TransferScreen = ({ navigation }) => {
 
         const transferData = { ...transfer, sender_iban: userIban };
 
-        fetch('http://localhost:7000/api/transfer', {
+        console.log('post_data', transferData)
+
+        fetch(`${API_URL}/api/transfer`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

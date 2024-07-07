@@ -1,18 +1,45 @@
 import React, { useContext } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { UserProvider, UserContext } from '../context/UserContext';
+import { API_URL } from '@env';
 
 const CheckbookRequestScreen = ({ navigation }) => {
 
-    const { user, setUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
 
     const validationSchema = Yup.object().shape({
         checkbookType: Yup.string().required('Type de chéquier est requis'),
     });
+
+    const handleCheckbookRequest = async (values) => {
+        try {
+            const response = await fetch(`${API_URL}/api/order_checkbook`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_iban: user.iban,
+                    checkbook_type: values.checkbookType,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                Alert.alert('Succès', 'La demande de chéquier a été effectuée avec succès.');
+                navigation.goBack();
+            } else {
+                Alert.alert('Erreur', data.error || 'Une erreur est survenue.');
+            }
+        } catch (error) {
+            Alert.alert('Erreur', 'Impossible de se connecter au serveur.');
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -37,10 +64,7 @@ const CheckbookRequestScreen = ({ navigation }) => {
             <Formik
                 initialValues={{ checkbookType: '' }}
                 validationSchema={validationSchema}
-                onSubmit={(values) => {
-                    console.log(values);
-                    // Handle form submission
-                }}
+                onSubmit={handleCheckbookRequest}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
                     <View style={styles.form}>

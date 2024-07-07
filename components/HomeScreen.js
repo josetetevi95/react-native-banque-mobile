@@ -1,13 +1,42 @@
-import React, { useContext } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BottomNavigation from './menu/BottomNavigation';
-import { UserProvider, UserContext } from '../context/UserContext';
+import { UserContext } from '../context/UserContext';
+import TransactionItem from './TransactionItem';
+import { API_URL } from '@env';
 
 const HomeScreen = ({ navigation }) => {
+    const { user } = useContext(UserContext);
+    const [transactions, setTransactions] = useState([]);
 
-    const { user, setUser } = useContext(UserContext);
-    console.log(user);
+    useEffect(() => {
+
+        const user_transaction = {
+            sender_iban: user?.iban, // Ajout d'une vérification pour éviter les erreurs si user est null
+        };
+
+        console.log(user_transaction);
+
+        fetch(`${API_URL}/api/transactions`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user_transaction),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (Array.isArray(data?.transactions)) {
+                    setTransactions(data.transactions);
+                    console.log(data.transactions)
+                } else {
+                    console.error('Expected an array but got:', data);
+                }
+                console.log(data); // Afficher les transactions dans la console
+            })
+            .catch(error => console.error('Error fetching transactions:', error));
+    }, [user]); // Ajout de user comme dépendance pour éviter les appels API avant que user soit disponible
 
     return (
         <View style={styles.container}>
@@ -22,7 +51,7 @@ const HomeScreen = ({ navigation }) => {
                 </View>
                 <View style={styles.balanceContainer}>
                     <Text style={styles.balanceText}>Principal · EUR</Text>
-                    <Text style={styles.balanceAmount}>{user.solde} €</Text>
+                    <Text style={styles.balanceAmount}>{user?.solde ?? ''} €</Text>
                     <TouchableOpacity style={styles.balanceButton}>
                         <Text style={styles.balanceButtonText}>Comptes</Text>
                     </TouchableOpacity>
@@ -53,25 +82,11 @@ const HomeScreen = ({ navigation }) => {
                 </View>
             </View>
             <ScrollView style={styles.contentContainer}>
-                <View style={styles.notification}>
-                    <Text style={styles.notificationText}>Limite de paiements sans contact presque atteinte</Text>
-                    <Text style={styles.notificationSubText}>Réinitialisez la limite de paiements sans contact pour éviter les refus de transactions.</Text>
-                    <TouchableOpacity style={styles.notificationButton}>
-                        <Text style={styles.notificationButtonText}>Réinitialiser la limite</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.transaction}>
-                    <Text style={styles.transactionText}>José Rodolphe TETEVI</Text>
-                    <Text style={styles.transactionDate}>4 juil., 13:44</Text>
-                    <Text style={styles.transactionAmountNegative}>-222 €</Text>
-                </View>
-                <View style={styles.transaction}>
-                    <Text style={styles.transactionText}>Argent ajouté via --9097</Text>
-                    <Text style={styles.transactionDate}>4 juil., 13:41</Text>
-                    <Text style={styles.transactionAmountPositive}>+223 €</Text>
-                </View>
+                {transactions.map((transaction, index) => (
+                    <TransactionItem key={index} transaction={transaction} />
+                ))}
             </ScrollView>
-            <BottomNavigation navigation={navigation} activeTab="Home" /> {/* Utiliser le composant */}
+            <BottomNavigation navigation={navigation} activeTab="Home" />
         </View>
     );
 };
@@ -79,7 +94,7 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f0f5f0', // Couleur de fond clair
+        backgroundColor: '#f0f5f0',
     },
     header: {
         backgroundColor: '#50c878fa',
@@ -169,53 +184,6 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         padding: 20,
-    },
-    notification: {
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        padding: 20,
-        marginBottom: 10,
-    },
-    notificationText: {
-        color: '#50c878fa',
-        fontWeight: 'bold',
-    },
-    notificationSubText: {
-        color: '#555',
-        marginTop: 10,
-    },
-    notificationButton: {
-        marginTop: 10,
-        backgroundColor: '#50c878fa',
-        borderRadius: 20,
-        paddingVertical: 5,
-        paddingHorizontal: 20,
-        alignSelf: 'flex-start',
-    },
-    notificationButtonText: {
-        color: '#fff',
-        fontWeight: 'bold',
-    },
-    transaction: {
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        padding: 20,
-        marginBottom: 10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    transactionText: {
-        color: '#333',
-    },
-    transactionDate: {
-        color: '#aaa',
-    },
-    transactionAmountNegative: {
-        color: '#e74c3c',
-    },
-    transactionAmountPositive: {
-        color: '#2ecc71',
     },
 });
 
