@@ -1,41 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+
 
 const TransferScreen = ({ navigation }) => {
     const [transfer, setTransfer] = useState({
-        sender_iban: '',
         receiver_iban: '',
         amount: ''
     });
+
+    const [userIban, setUserIban] = useState('');
+
+    useEffect(() => {
+        // Fonction pour récupérer les informations de l'utilisateur connecté
+        const fetchUserData = async () => {
+            try {
+                const userId = 1; // Remplacez par l'ID de l'utilisateur connecté
+                const response = await fetch(`http://localhost:7000/api/users/${userId}`);
+                const data = await response.json();
+                console.log('Données utilisateur:', data);
+                if (data.success) {
+                    setUserIban(data.user.iban);
+                } else {
+                    Alert.alert('Erreur', 'Erreur lors de la récupération de l\'IBAN');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la récupération de l\'IBAN:', error);
+                Alert.alert('Erreur', 'Erreur lors de la récupération de l\'IBAN');
+            }
+        };
+
+        fetchUserData();
+    }, []);
 
     const handleChange = (name, value) => {
         setTransfer({ ...transfer, [name]: value });
     };
 
     const handleTransfer = () => {
-        console.log("test", transfer.sender_iban, transfer.receiver_iban, transfer.amount);
-        // Validation des champs
-        if (!transfer.sender_iban || !transfer.receiver_iban || !transfer.amount) {
+        if (!transfer.receiver_iban || !transfer.amount) {
             Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
             return;
         }
 
-        // Effectuer la requête de transfert
+        const transferData = { ...transfer, sender_iban: userIban };
+
         fetch('http://localhost:7000/api/transfer', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(transfer),
+            body: JSON.stringify(transferData),
         })
             .then(response => response.json())
             .then(data => {
+                console.log('Données de transfert:', data);
                 if (data.success) {
                     Alert.alert('Succès', 'Virement réussi');
-                    // Réinitialiser les champs après un succès
                     setTransfer({
-                        sender_iban: '',
-
                         receiver_iban: '',
                         amount: ''
                     });
@@ -44,7 +65,7 @@ const TransferScreen = ({ navigation }) => {
                 }
             })
             .catch(error => {
-                console.error('Erreur:', error);
+                console.error('Erreur lors du virement:', error);
                 Alert.alert('Erreur', 'Erreur lors du virement');
             });
     };
@@ -52,13 +73,6 @@ const TransferScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Effectuer un virement</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Votre IBAN"
-                onChangeText={(value) => handleChange('sender_iban', value)}
-                value={transfer.sender_iban}
-            />
-
             <TextInput
                 style={styles.input}
                 placeholder="IBAN du destinataire"

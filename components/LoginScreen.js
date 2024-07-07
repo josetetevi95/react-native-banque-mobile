@@ -50,6 +50,7 @@ const LoginScreen = ({ navigation }) => {
                 Alert.alert('Success', 'Login successful');
                 resetForm();
                 // Navigate to the next screen or perform other actions
+
             } else {
                 Alert.alert('Error', data.message || 'Login failed');
             }
