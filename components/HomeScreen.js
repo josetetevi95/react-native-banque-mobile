@@ -1,22 +1,27 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BottomNavigation from './menu/BottomNavigation';
 import { UserContext } from '../context/UserContext';
 import TransactionItem from './TransactionItem';
+import NotificationModal from '../components/NotificationModal';
+import { useFocusEffect } from '@react-navigation/native';
 import { API_URL } from '@env';
 
 const HomeScreen = ({ navigation }) => {
-    const { user } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
     const [transactions, setTransactions] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+    const [isSuccess, setIsSuccess] = useState(true);
+    const [isFetched, setIsFetched] = useState(false);
 
-    useEffect(() => {
+    const fetchTransaction = useCallback(() => {
+        if (!user) return;
 
         const user_transaction = {
-            sender_iban: user?.iban, // Ajout d'une vérification pour éviter les erreurs si user est null
+            sender_iban: user.iban,
         };
-
-        console.log(user_transaction);
 
         fetch(`${API_URL}/api/transactions`, {
             method: 'POST',
@@ -29,17 +34,71 @@ const HomeScreen = ({ navigation }) => {
             .then(data => {
                 if (Array.isArray(data?.transactions)) {
                     setTransactions(data.transactions);
-                    console.log(data.transactions)
                 } else {
-                    console.error('Expected an array but got:', data);
+                    setIsSuccess(false);
+                    setModalMessage('Erreur lors de la récupération des transactions.');
+                    setModalVisible(true);
                 }
-                console.log(data); // Afficher les transactions dans la console
             })
-            .catch(error => console.error('Error fetching transactions:', error));
-    }, [user]); // Ajout de user comme dépendance pour éviter les appels API avant que user soit disponible
+            .catch(error => {
+                setIsSuccess(false);
+                setModalMessage('Impossible de se connecter au serveur.');
+                setModalVisible(true);
+            });
+    }, [user]);
+
+    const fetchUserData = useCallback(() => {
+        if (!user || !user.id) return;
+
+        fetch(`${API_URL}/api/users/${user.id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                setUser(data.user);
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des données utilisateur:', error);
+            });
+    }, [user?.id, setUser]);
+
+    useFocusEffect(
+        useCallback(() => {
+            if (!isFetched) {
+                fetchTransaction();
+                fetchUserData();
+                setIsFetched(true);
+            }
+
+            return () => {
+                setIsFetched(false); // Reset isFetched when the screen loses focus
+            };
+        }, [fetchTransaction, fetchUserData, isFetched])
+    );
+
+    useEffect(() => {
+        if (!isFetched && user) {
+            fetchTransaction();
+            fetchUserData();
+            setIsFetched(true);
+        }
+    }, [fetchTransaction, fetchUserData, isFetched, user]);
+
+    const handleModalClose = () => {
+        setModalVisible(false);
+    };
 
     return (
         <View style={styles.container}>
+            <NotificationModal
+                visible={modalVisible}
+                onClose={handleModalClose}
+                message={modalMessage}
+                isSuccess={isSuccess}
+            />
             <View style={styles.header}>
                 <View style={styles.topBar}>
                     <View style={styles.profileIcon}>

@@ -49,7 +49,7 @@ const RegistrationScreen = ({ navigation }) => {
             if (response.ok) {
                 Alert.alert('Succès', 'Inscription réussie');
                 resetForm();
-                navigation.navigate('login');
+                navigation.navigate('Se connecter');
             } else {
                 Alert.alert('Erreur', data.message || 'Erreur lors de l\'inscription');
             }

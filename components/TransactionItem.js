@@ -1,4 +1,3 @@
-// TransactionItem.js
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
@@ -13,6 +12,8 @@ const TransactionItem = ({ transaction }) => {
         </View>
     );
 };
+
+export default TransactionItem;
 
 const styles = StyleSheet.create({
     transaction: {
@@ -37,5 +38,3 @@ const styles = StyleSheet.create({
         color: '#2ecc71',
     },
 });
-
-export default TransactionItem;
