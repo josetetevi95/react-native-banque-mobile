@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { UserProvider, UserContext } from './context/UserContext';
@@ -10,6 +9,7 @@ import HomeScreen from './components/HomeScreen';
 import TransferScreen from './components/TransferScreen';
 import LogoutButton from './components/LogoutButton';
 import CheckbookRequestScreen from './components/CheckbookRequestScreen';
+import TestRessourceScreen from './components/TestRessourceScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -24,6 +24,7 @@ const AppNavigator = () => {
             <Drawer.Screen name="Acceuil" component={HomeScreen} />
             <Drawer.Screen name="Transfert" component={TransferScreen} />
             <Drawer.Screen name="Demander un chéquier" component={CheckbookRequestScreen} />
+            <Drawer.Screen name="Test" component={TestRessourceScreen} />
             <Drawer.Screen name="Se déconnecter" component={LogoutButton} />
           </>
         ) : (

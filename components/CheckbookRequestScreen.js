@@ -1,21 +1,69 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { UserProvider, UserContext } from '../context/UserContext';
+import { API_URL } from '@env';
+import NotificationModal from '../components/NotificationModal';
 
 const CheckbookRequestScreen = ({ navigation }) => {
-
-    const { user, setUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+    const [isSuccess, setIsSuccess] = useState(true);
 
     const validationSchema = Yup.object().shape({
         checkbookType: Yup.string().required('Type de chéquier est requis'),
     });
 
+    const handleCheckbookRequest = async (values) => {
+        try {
+            const response = await fetch(`${API_URL}/api/order_checkbook`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_iban: user.iban,
+                    checkbook_type: values.checkbookType,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setIsSuccess(true);
+                setModalMessage('La demande de chéquier a été effectuée avec succès.');
+                setModalVisible(true);
+            } else {
+                setIsSuccess(false);
+                setModalMessage(data.error || 'Une erreur est survenue.');
+                setModalVisible(true);
+            }
+        } catch (error) {
+            setIsSuccess(false);
+            setModalMessage('Impossible de se connecter au serveur.');
+            setModalVisible(true);
+        }
+    };
+
+    const handleModalClose = () => {
+        setModalVisible(false);
+        if (isSuccess) {
+            navigation.goBack();
+        }
+    };
+
     return (
         <View style={styles.container}>
+            <NotificationModal
+                visible={modalVisible}
+                onClose={handleModalClose}
+                message={modalMessage}
+                isSuccess={isSuccess}
+            />
             <View style={styles.header}>
                 <Text style={styles.title}>Demander un chéquier</Text>
                 <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
@@ -37,10 +85,7 @@ const CheckbookRequestScreen = ({ navigation }) => {
             <Formik
                 initialValues={{ checkbookType: '' }}
                 validationSchema={validationSchema}
-                onSubmit={(values) => {
-                    console.log(values);
-                    // Handle form submission
-                }}
+                onSubmit={handleCheckbookRequest}
             >
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
                     <View style={styles.form}>

@@ -6,35 +6,37 @@ const BottomNavigation = ({ navigation, activeTab }) => {
     return (
         <View style={styles.footer}>
             <TouchableOpacity
-                style={[styles.footerButton, activeTab === 'Home' && styles.activeFooterButton]}
-                onPress={() => navigation.navigate('Home')}
+                style={[styles.footerButton, activeTab === 'Acceuil' && styles.activeFooterButton]}
+                onPress={() => navigation.navigate('Acceuil')}
             >
-                <Icon name="home" size={24} color={activeTab === 'Home' ? '#50c878fa' : '#aaa'} />
-                <Text style={[styles.footerButtonText, activeTab === 'Home' && styles.activeFooterButtonText]}>
+                <Icon name="home" size={24} color={activeTab === 'Acceuil' ? '#50c878fa' : '#aaa'} />
+                <Text style={[styles.footerButtonText, activeTab === 'Acceuil' && styles.activeFooterButtonText]}>
                     Accueil
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
-                style={[styles.footerButton, activeTab === 'Invest' && styles.activeFooterButton]}
-                onPress={() => navigation.navigate('Invest')}
+                style={[styles.footerButton, activeTab === 'Transfert' && styles.activeFooterButton]}
+                onPress={() => navigation.navigate('Transfert')}
             >
-                <Icon name="trending-up" size={24} color={activeTab === 'Invest' ? '#50c878fa' : '#aaa'} />
-                <Text style={[styles.footerButtonText, activeTab === 'Invest' && styles.activeFooterButtonText]}>
+                <Icon name="trending-up" size={24} color={activeTab === 'Transfert' ? '#50c878fa' : '#aaa'} />
+                <Text style={[styles.footerButtonText, activeTab === 'Transfert' && styles.activeFooterButtonText]}>
                     Transfert
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
-                style={[styles.footerButton, activeTab === 'Payments' && styles.activeFooterButton]}
-                onPress={() => navigation.navigate('Payments')}
+                style={[styles.footerButton, activeTab === 'Demander un chéquier' && styles.activeFooterButton]}
+                onPress={() => navigation.navigate('Demander un chéquier')}
             >
-                <Icon name="book" size={24} color={activeTab === 'Payments' ? '#50c878fa' : '#aaa'} />
-                <Text style={[styles.footerButtonText, activeTab === 'Payments' && styles.activeFooterButtonText]}>
+                <Icon name="book" size={24} color={activeTab === 'Demander un chéquier' ? '#50c878fa' : '#aaa'} />
+                <Text style={[styles.footerButtonText, activeTab === 'Demander un chéquier' && styles.activeFooterButtonText]}>
                     Chequier
                 </Text>
             </TouchableOpacity>
         </View>
     );
 };
+
+export default BottomNavigation;
 
 const styles = StyleSheet.create({
     footer: {
@@ -60,5 +62,3 @@ const styles = StyleSheet.create({
         color: '#50c878fa',
     },
 });
-
-export default BottomNavigation;

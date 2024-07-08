@@ -26,6 +26,8 @@ const LogoutButton = () => {
     );
 };
 
+export default LogoutButton;
+
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
@@ -43,5 +45,3 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
-export default LogoutButton;

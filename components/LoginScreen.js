@@ -46,9 +46,9 @@ const LoginScreen = ({ navigation }) => {
             const data = await response.json();
             if (response.ok) {
                 Alert.alert('Success', 'Login successful');
-                setUser(data);  // Enregistrer les informations de l'utilisateur dans le contexte
+                setUser(data.user);  // Enregistrer les informations de l'utilisateur dans le contexte
                 resetForm();
-                navigation.navigate('Home');
+                navigation.navigate('Acceuil');
 
             } else {
                 Alert.alert('Error', data.message || 'Login failed');

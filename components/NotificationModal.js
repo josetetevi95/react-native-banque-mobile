@@ -2,39 +2,36 @@ import React from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const LogoutModal = ({ visible, onCancel, onConfirm }) => {
+const NotificationModal = ({ visible, onClose, message, isSuccess }) => {
     return (
         <Modal
             animationType="slide"
             transparent={true}
             visible={visible}
-            onRequestClose={onCancel}
+            onRequestClose={onClose}
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <Icon name="exit-outline" size={50} color="#ff6347" style={styles.icon} />
-                    <Text style={styles.modalText}>Oh non! Vous partez... Vous êtes sûr ?</Text>
-                    <View style={styles.buttonContainer}>
-                        <TouchableOpacity
-                            style={[styles.button, styles.buttonCancel]}
-                            onPress={onCancel}
-                        >
-                            <Text style={styles.buttonText}>Non</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[styles.button, styles.buttonConfirm]}
-                            onPress={onConfirm}
-                        >
-                            <Text style={styles.buttonText}>Oui, Déconnecte moi</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <Icon
+                        name={isSuccess ? "checkmark-circle-outline" : "alert-circle-outline"}
+                        size={50}
+                        color={isSuccess ? "#4CAF50" : "#FF6347"}
+                        style={styles.icon}
+                    />
+                    <Text style={styles.modalText}>{message}</Text>
+                    <TouchableOpacity
+                        style={[styles.button, isSuccess ? styles.buttonSuccess : styles.buttonError]}
+                        onPress={onClose}
+                    >
+                        <Text style={styles.buttonText}>OK</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>
     );
 };
 
-export default LogoutModal;
+export default NotificationModal;
 
 const styles = StyleSheet.create({
     centeredView: {
@@ -67,21 +64,17 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
     button: {
         borderRadius: 20,
         padding: 10,
         elevation: 2,
-        marginHorizontal: 5,
+        marginTop: 10,
     },
-    buttonCancel: {
-        backgroundColor: '#d3d3d3',
+    buttonSuccess: {
+        backgroundColor: '#4CAF50',
     },
-    buttonConfirm: {
-        backgroundColor: '#ff6347',
+    buttonError: {
+        backgroundColor: '#FF6347',
     },
     buttonText: {
         color: 'white',
