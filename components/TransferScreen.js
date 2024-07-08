@@ -14,7 +14,7 @@ const TransferScreen = ({ navigation }) => {
         // Fonction pour récupérer les informations de l'utilisateur connecté
         const fetchUserData = async () => {
             try {
-                const userId = 1; // Remplacez par l'ID de l'utilisateur connecté
+                const userId = 1;
                 const response = await fetch(`http://localhost:7000/api/users/${userId}`);
                 const data = await response.json();
                 console.log('Données utilisateur:', data);
