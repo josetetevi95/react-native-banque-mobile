@@ -41,7 +41,7 @@ L'API se trouve dans le dossier `API` du repository.
     PRIMARY KEY (`id`),
     UNIQUE KEY `email` (`email`),
     UNIQUE KEY `iban` (`iban`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+    ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
     -- Ajout des utilisateurs
     INSERT INTO users (nom, prenom, email, password, solde, iban) VALUES 
@@ -58,7 +58,7 @@ L'API se trouve dans le dossier `API` du repository.
     PRIMARY KEY (`id`),
     KEY `user_iban` (`user_iban`),
     CONSTRAINT `checkbook_requests_ibfk_1` FOREIGN KEY (`user_iban`) REFERENCES `users` (`iban`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+    ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
     -- Ajout des demandes de chéquier
     INSERT INTO checkbook_requests (user_iban, checkbook_type) VALUES 
@@ -76,7 +76,7 @@ L'API se trouve dans le dossier `API` du repository.
     PRIMARY KEY (`id`),
     KEY `sender_iban` (`sender_iban`),
     CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`sender_iban`) REFERENCES `users` (`iban`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+    ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4;
 
     -- Insertion d'une transaction
     INSERT INTO transactions (sender_iban, receiver_iban, amount) VALUES 
